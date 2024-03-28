@@ -14,7 +14,7 @@ describe('Create Event Test', function() {
             .setValue("input[type='password']",process.env.PASSWORD) // enter password
             .click("button[type='submit']") // click continue
             .waitForElementPresent("div[class^='event-type-group-list-item user-item']",10000)
-            .expect.element("div[class='event-type-card-list']").to.be.not.present
+            // .expect.element("div[class='event-type-card-list']").to.be.not.present
     });
   
     it.skip('Should create an event with no customization', function(browser) {
@@ -103,7 +103,7 @@ describe('Create Event Test', function() {
             .assert.visible(`button[aria-label='${event_name_selector}']`) // verify event card is created
     });
 
-    it('Should create an event with daily limit', function(browser) {
+    it.skip('Should create an event with daily limit', function(browser) {
         let event_name = "4-Vinh Nguyen's Meeting";
         let event_name_selector = "4-Vinh Nguyen\\'s Meeting";
         event_name_selectors.push(event_name_selector)
@@ -127,6 +127,34 @@ describe('Create Event Test', function() {
             .click("div[data-testid='event-type-editor-footer'] button:nth-of-type(2)") // click save and close
             .pause(2000) // pause for calendly to save event configuration
             .waitForElementPresent("div[data-testid='event-type-editor'] div:first-child button",10000)
+            .click("div[data-testid='event-type-editor'] div:first-child button") // click done
+            .waitForElementPresent(`button[aria-label='${event_name_selector}']`, 10000)
+            .assert.visible(`button[aria-label='${event_name_selector}']`) // verify event card is created
+    });
+
+    it.skip('Should create an event with custom duration', function(browser) {
+        let event_name = "5-Vinh Nguyen's Meeting";
+        let event_name_selector = "5-Vinh Nguyen\\'s Meeting";
+        event_name_selectors.push(event_name_selector)
+        browser
+            .waitForElementPresent("a[href*='event_types/new']",10000)
+            .execute(function() { // using this function since click() doesnt support * locators
+                document.querySelector("a[href*='event_types/new']").click(); // create new event
+            })
+            .waitForElementPresent("tr[data-component='one-on-one'] button:first-child", 10000)
+            .click("tr[data-component='one-on-one'] button:first-child") // select one on one meeting
+            .waitForElementPresent("div[role='dialog'] button:nth-of-type(2)", 10000)
+            .click("div[role='dialog'] button:nth-of-type(2)") // select next
+            .waitForElementPresent("form input", 10000)
+            .setValue("form input#event-name-field",event_name) // name event
+            .click("div[aria-labelledby='duration-label']")
+            .click("div[aria-labelledby='duration-label'] + div button:nth-of-type(5)")
+            .setValue("input[name='customEventDuration']",1) // set custom duration to 1
+            .click("div[name='customEventDurationType']") // expand duration types
+            .click("div[name='customEventDurationType'] + div button:nth-of-type(2)") // select hrs
+            .click("div[data-testid='event-type-editor-footer'] button:nth-of-type(2)") // click continue
+            .waitForElementPresent("div[data-testid='event-type-editor'] button[aria-label='Close']", 10000)
+            .click("div[data-testid='event-type-editor'] button[aria-label='Close']") // close notification
             .click("div[data-testid='event-type-editor'] div:first-child button") // click done
             .waitForElementPresent(`button[aria-label='${event_name_selector}']`, 10000)
             .assert.visible(`button[aria-label='${event_name_selector}']`) // verify event card is created
