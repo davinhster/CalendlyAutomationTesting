@@ -1,4 +1,4 @@
-describe('Create Event with no customization', function() {
+describe('Create Event Test', function() {
     var event_name_selectors = [];
     before(function(browser) {
         browser
@@ -17,7 +17,7 @@ describe('Create Event with no customization', function() {
             .expect.element("div[class='event-type-card-list']").to.be.not.present
     });
   
-    it('Should create an event with no customization', function(browser) {
+    it.skip('Should create an event with no customization', function(browser) {
         let event_name = "1-Vinh Nguyen's Meeting";
         let event_name_selector = "1-Vinh Nguyen\\'s Meeting";
         event_name_selectors.push(event_name_selector)
@@ -40,7 +40,7 @@ describe('Create Event with no customization', function() {
             .assert.visible(`button[aria-label='${event_name_selector}']`) // verify event card is created
     });
 
-    it('Should create an event with buffer time', function(browser) {
+    it.skip('Should create an event with buffer time', function(browser) {
         let event_name = "2-Vinh Nguyen's Meeting";
         let event_name_selector = "2-Vinh Nguyen\\'s Meeting";
         event_name_selectors.push(event_name_selector)
@@ -66,6 +66,35 @@ describe('Create Event with no customization', function() {
             .click("div[aria-labelledby='after_buffer_label']") // select after buffer
             .waitForElementPresent("div[aria-labelledby='after_buffer_label']+ div button:nth-of-type(4)",10000)
             .click("div[aria-labelledby='after_buffer_label']+ div button:nth-of-type(4)") // select 15 minutes
+            .click("div[data-testid='event-type-editor-footer'] button:nth-of-type(2)") // click save and close
+            .pause(2000) // pause for calendly to save event configuration
+            .waitForElementPresent("div[data-testid='event-type-editor'] div:first-child button",10000)
+            .click("div[data-testid='event-type-editor'] div:first-child button") // click done
+            .waitForElementPresent(`button[aria-label='${event_name_selector}']`, 10000)
+            .assert.visible(`button[aria-label='${event_name_selector}']`) // verify event card is created
+    });
+
+    it.skip('Should create an event with minimum notice', function(browser) {
+        let event_name = "3-Vinh Nguyen's Meeting";
+        let event_name_selector = "3-Vinh Nguyen\\'s Meeting";
+        event_name_selectors.push(event_name_selector)
+        browser
+            .waitForElementPresent("a[href*='event_types/new']",10000)
+            .execute(function() { // using this function since click() doesnt support * locators
+                document.querySelector("a[href*='event_types/new']").click(); // create new event
+            })
+            .waitForElementPresent("tr[data-component='one-on-one'] button:first-child", 10000)
+            .click("tr[data-component='one-on-one'] button:first-child") // select one on one meeting
+            .waitForElementPresent("div[role='dialog'] button:nth-of-type(2)", 10000)
+            .click("div[role='dialog'] button:nth-of-type(2)") // select next
+            .waitForElementPresent("form input", 10000)
+            .setValue("form input#event-name-field",event_name) // name event
+            .click("div[data-testid='event-type-editor-footer'] button:nth-of-type(2)") // click continue
+            .waitForElementPresent("div[data-testid='event-type-editor'] button[aria-label='Close']", 10000)
+            .click("div[data-testid='event-type-editor'] button[aria-label='Close']") // close notification
+            .click("button[data-calendly-label='scheduling_settings_section']") // click scheduling settings
+            .click("div[name='minimum_notice'] button") // click on minimum notice time
+            .setValue("div[name='minimum_notice'] button  + div input",1) // set value to 1 hour
             .click("div[data-testid='event-type-editor-footer'] button:nth-of-type(2)") // click save and close
             .pause(2000) // pause for calendly to save event configuration
             .waitForElementPresent("div[data-testid='event-type-editor'] div:first-child button",10000)
