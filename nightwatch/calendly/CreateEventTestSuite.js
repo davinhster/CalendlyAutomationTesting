@@ -1,4 +1,4 @@
-describe('Create Event Test', function() {
+describe('Create Event Tests', function() {
     var event_name_selectors = [];
     before(function(browser) {
         browser
@@ -14,7 +14,6 @@ describe('Create Event Test', function() {
             .setValue("input[type='password']",process.env.PASSWORD) // enter password
             .click("button[type='submit']") // click continue
             .waitForElementPresent("div[class^='event-type-group-list-item user-item']",10000)
-            // .expect.element("div[class='event-type-card-list']").to.be.not.present
     });
   
     it.skip('Should create an event with no customization', function(browser) {
@@ -161,6 +160,8 @@ describe('Create Event Test', function() {
     });
 
     after(function(browser) {
+        browser.navigateTo("https://calendly.com/event_types/user/me")
+        .waitForElementPresent("div[class^='event-type-group-list-item user-item']",10000)
         for (let event_name_selector of event_name_selectors) {
             browser
                 .click(`button[aria-label='${event_name_selector} settings']`) // click on gear icon
