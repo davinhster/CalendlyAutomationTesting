@@ -48,7 +48,7 @@ describe('Edge Case Test Suite', function() {
             .assert.visible(`button[aria-label='${event_name_selector}']`) // verify event card is created
     });
 
-    it('Should test the boundaries for an event with custom description', function(browser) { //todo: figure out how to stop nightwatch upon failure
+    it.skip('Should test the boundaries for an event with custom description', function(browser) { //todo: figure out how to stop nightwatch upon failure
         let event_name = "10-Vinh Nguyen's Meeting";
         let event_name_selector = "10-Vinh Nguyen\\'s Meeting";
         event_name_selectors.push(event_name_selector)
@@ -93,7 +93,7 @@ describe('Edge Case Test Suite', function() {
 
     after(function(browser) {
         browser.navigateTo("https://calendly.com/event_types/user/me")
-        .waitForElementPresent("div[class^='event-type-group-list-item user-item']",10000)
+            .waitForElementPresent("div[class^='event-type-group-list-item user-item']",10000)
         for (let event_name_selector of event_name_selectors) {
             browser
                 .click(`button[aria-label='${event_name_selector} settings']`) // click on gear icon

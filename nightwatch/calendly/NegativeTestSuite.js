@@ -116,9 +116,48 @@ describe('Create Event Error Handling Tests', function() {
             .assert.visible(`button[aria-label='${event_name_selector}']`) // verify event card is created
     });
 
+    it('Should show error when creating event link with special characters', function(browser) {
+        let event_name = "11-Vinh Nguyen's Meeting";
+        let event_name_selector = "11-Vinh Nguyen\\'s Meeting";
+        event_name_selectors.push(event_name_selector)
+        const invalidEventLink = "11-Vinh Nguyen's Meeting";
+        const validEventLink = "11-vinh-nguyen-s-meeting-valid";
+        browser
+            .waitForElementPresent("a[href*='event_types/new']",10000)
+            .execute(function() { // using this function since click() doesnt support * locators
+                document.querySelector("a[href*='event_types/new']").click(); // create new event
+            })
+            .waitForElementPresent("tr[data-component='one-on-one'] button:first-child", 10000)
+            .click("tr[data-component='one-on-one'] button:first-child") // select one on one meeting
+            .waitForElementPresent("div[role='dialog'] button:nth-of-type(2)", 10000)
+            .click("div[role='dialog'] button:nth-of-type(2)") // select next
+            .waitForElementPresent("form input", 10000)
+            .setValue("form input#event-name-field",event_name) // name event
+            .click("div[data-testid='event-type-editor-footer'] button:nth-of-type(2)") // click continue
+            .waitForElementPresent("div[data-testid='event-type-editor'] button[aria-label='Close']", 10000)
+            .click("div[data-testid='event-type-editor'] button[aria-label='Close']") // close notification
+            .click("button[data-calendly-label='booking_page_options_section']") // click booking page options
+            .pause()
+            .waitForElementPresent("input#slug-field")
+            .setValue("input#slug-field",invalidEventLink) // set invalid event link
+            .sendKeys('input#slug-field', browser.Keys.ENTER)
+            .waitForElementPresent("xpath","//form//div[contains(text(),'Invalid')]//div",10000) 
+            .isVisible("xpath","//form//div[contains(text(),'Invalid')]//div") // verify error message is shown
+            .pause(1000)
+            .setValue("input#slug-field",validEventLink) // set valid event link
+            .pause()
+            .click("div[data-testid='event-type-editor-footer'] button:nth-of-type(2)") // click save and close
+            .pause(5000)
+            .waitForElementPresent("div[data-testid='event-type-editor'] div:first-child button",10000, function() {
+                this.click("xpath","/html/body/div[6]/div[2]/div/div/div/div[1]/div/div/div[1]/div/button") // click done
+            })
+            .waitForElementPresent(`button[aria-label='${event_name_selector}']`, 10000)
+            .assert.visible(`button[aria-label='${event_name_selector}']`) // verify event card is created
+    });
+
     after(function(browser) {
         browser.navigateTo("https://calendly.com/event_types/user/me")
-        .waitForElementPresent("div[class^='event-type-group-list-item user-item']",10000)
+            .waitForElementPresent("div[class^='event-type-group-list-item user-item']",10000)
         for (let event_name_selector of event_name_selectors) {
             browser
                 .click(`button[aria-label='${event_name_selector} settings']`) // click on gear icon
