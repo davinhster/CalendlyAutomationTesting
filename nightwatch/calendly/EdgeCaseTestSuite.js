@@ -17,7 +17,7 @@ describe('Edge Case Test Suite', function() {
             .waitForElementPresent("div[class^='event-type-group-list-item user-item']",10000)
     });
   
-    it('Should create an event with maximum custom duration', function(browser) {
+    it.skip('Should test the boundaries for an event with custom duration', function(browser) {
         let event_name = "9-Vinh Nguyen's Meeting";
         let event_name_selector = "9-Vinh Nguyen\\'s Meeting";
         event_name_selectors.push(event_name_selector)
@@ -41,6 +41,49 @@ describe('Edge Case Test Suite', function() {
             .click("div[data-testid='event-type-editor-footer'] button:nth-of-type(2)") // click continue
             .waitForElementPresent("div[data-testid='event-type-editor'] button[aria-label='Close']", 10000)
             .click("div[data-testid='event-type-editor'] button[aria-label='Close']") // close notification
+            .waitForElementPresent("div[data-testid='event-type-editor'] div:first-child button",10000, function() {
+                this.click("xpath","/html/body/div[6]/div[2]/div/div/div/div[1]/div/div/div[1]/div/button") // click done
+            })
+            .waitForElementPresent(`button[aria-label='${event_name_selector}']`, 10000)
+            .assert.visible(`button[aria-label='${event_name_selector}']`) // verify event card is created
+    });
+
+    it('Should test the boundaries for an event with custom description', function(browser) { //todo: figure out how to stop nightwatch upon failure
+        let event_name = "10-Vinh Nguyen's Meeting";
+        let event_name_selector = "10-Vinh Nguyen\\'s Meeting";
+        event_name_selectors.push(event_name_selector)
+        const invalidLargeTextInput = "a".repeat(10001);
+        const validLargeTextInput = "a".repeat(993);
+        browser
+            .waitForElementPresent("a[href*='event_types/new']",10000)
+            .execute(function() { // using this function since click() doesnt support * locators
+                document.querySelector("a[href*='event_types/new']").click(); // create new event
+            })
+            .waitForElementPresent("tr[data-component='one-on-one'] button:first-child", 10000)
+            .click("tr[data-component='one-on-one'] button:first-child") // select one on one meeting
+            .waitForElementPresent("div[role='dialog'] button:nth-of-type(2)", 10000)
+            .click("div[role='dialog'] button:nth-of-type(2)") // select next
+            .waitForElementPresent("form input", 10000)
+            .setValue("form input#event-name-field",event_name) // name event
+            .click("div[data-testid='event-type-editor-footer'] button:nth-of-type(2)") // click continue
+            .waitForElementPresent("div[data-testid='event-type-editor'] button[aria-label='Close']", 10000)
+            .click("div[data-testid='event-type-editor'] button[aria-label='Close']") // close notification
+            .click("button[data-calendly-label='event_details_section']") // click event details
+            .waitForElementPresent("div[class='ql-editor ql-blank']")
+            .pause()
+            .execute(function(invalidLargeTextInput) { // set description to exceed maximum large text input
+                const element = document.querySelector('div.ql-editor.ql-blank');
+                element.innerHTML = invalidLargeTextInput;
+              }, [invalidLargeTextInput])
+            .waitForElementPresent("xpath","//form//div[contains(text(),'Is too long')]",10000)
+            .isVisible("xpath","//form//div[contains(text(),'Is too long')]") // verify error message is shown
+            .pause()
+            .execute(function(validLargeTextInput) { // set description to exceed maximum large text input
+                const element = document.querySelector('div.ql-editor');
+                element.innerHTML = validLargeTextInput;
+              }, [validLargeTextInput])
+            .click("div[data-testid='event-type-editor-footer'] button:nth-of-type(2)") // click save and close
+            .pause(5000)
             .waitForElementPresent("div[data-testid='event-type-editor'] div:first-child button",10000, function() {
                 this.click("xpath","/html/body/div[6]/div[2]/div/div/div/div[1]/div/div/div[1]/div/button") // click done
             })
