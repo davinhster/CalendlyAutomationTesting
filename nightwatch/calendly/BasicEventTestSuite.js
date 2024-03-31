@@ -46,6 +46,7 @@ describe('Basic Event Test Suite', function() {
             .waitForElementPresent("button[data-calendly-label='event_details_section']",10000)
             .click("button[data-calendly-label='event_details_section']")
             .waitForElementPresent("input#event-name-field",10000)
+            .pause(1000)
             .setValue("input#event-name-field",emptyInput)
             .sendKeys('input#event-name-field', browser.Keys.ENTER)
             .refresh()
@@ -57,6 +58,7 @@ describe('Basic Event Test Suite', function() {
             .waitForElementPresent("button[data-calendly-label='event_details_section']",10000)
             .click("button[data-calendly-label='event_details_section']")
             .waitForElementPresent("input#event-name-field",10000)
+            .pause(1000)
             .setValue("input#event-name-field",exceedMaxInput)
             .sendKeys('input#event-name-field', browser.Keys.ENTER)
             .isPresent("xpath","//div[contains(text(),'maximum is 55 characters')]")
@@ -71,6 +73,7 @@ describe('Basic Event Test Suite', function() {
             .waitForElementPresent("button[data-calendly-label='event_details_section']",10000)
             .click("button[data-calendly-label='event_details_section']")
             .waitForElementPresent("input#event-name-field",10000)
+            .pause(1000)
             .setValue("input#event-name-field",exactInput)
             .sendKeys('input#event-name-field', browser.Keys.ENTER)
             .pause(3000) // save
@@ -82,6 +85,7 @@ describe('Basic Event Test Suite', function() {
             .waitForElementPresent("button[data-calendly-label='event_details_section']",10000)
             .click("button[data-calendly-label='event_details_section']")
             .waitForElementPresent("input#event-name-field",10000)
+            .pause(1000)
             .setValue("input#event-name-field",varietyInput)
             .sendKeys('input#event-name-field', browser.Keys.ENTER)
             .pause(3000) // save
@@ -94,6 +98,7 @@ describe('Basic Event Test Suite', function() {
             .waitForElementPresent("button[data-calendly-label='event_details_section']",10000)
             .click("button[data-calendly-label='event_details_section']")
             .waitForElementPresent("input#event-name-field",10000)
+            .pause(1000)
             .setValue("input#event-name-field",sqlQuery)
             .sendKeys('input#event-name-field', browser.Keys.ENTER)
             .pause(3000) // save
@@ -104,6 +109,7 @@ describe('Basic Event Test Suite', function() {
             .pause(3000)
             .click("button[data-calendly-label='event_details_section']")
             .waitForElementPresent("input#event-name-field",10000)
+            .pause(1000)
             .setValue("input#event-name-field",event_name)
             .sendKeys('input#event-name-field', browser.Keys.ENTER)
             .pause(3000) // save
