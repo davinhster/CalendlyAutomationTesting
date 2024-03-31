@@ -13,7 +13,7 @@ describe('Basic Event Test Suite', function() {
             .waitForElementPresent("input[type='password']", 10000)
             .setValue("input[type='password']",process.env.PASSWORD) // enter password
             .click("button[type='submit']") // click continue
-            .waitForElementPresent("div[class^='event-type-group-list-item user-item']",10000)
+            .waitForElementPresent("div[class^='event-type-group-list-item user-item']", 10000)
     });
   
     it('Should create an event with basic settings', function(browser) {
@@ -23,7 +23,7 @@ describe('Basic Event Test Suite', function() {
 
         // Create an event with valid event_name and basic configurations
         browser
-            .waitForElementPresent("a[href*='event_types/new']",10000)
+            .waitForElementPresent("a[href*='event_types/new']", 10000)
             .execute(function() { // using this function since click() doesnt support * locators
                 document.querySelector("a[href*='event_types/new']").click(); // create new event
             })
@@ -43,11 +43,11 @@ describe('Basic Event Test Suite', function() {
         // Edge Case - No input
         let emptyInput = "";
         browser
-            .waitForElementPresent("button[data-calendly-label='event_details_section']",10000)
+            .waitForElementPresent("button[data-calendly-label='event_details_section']", 10000)
             .click("button[data-calendly-label='event_details_section']")
-            .waitForElementPresent("input#event-name-field",10000)
+            .waitForElementPresent("input#event-name-field", 10000)
             .pause(1000)
-            .setValue("input#event-name-field",emptyInput)
+            .setValue("input#event-name-field", emptyInput)
             .sendKeys('input#event-name-field', browser.Keys.ENTER)
             .refresh()
             .isPresent("h1[data-testid='event-name-display']")
@@ -55,14 +55,14 @@ describe('Basic Event Test Suite', function() {
         // Edge Case - Input exceeds max character limit
         let exceedMaxInput = "a".repeat(1000);
         browser
-            .waitForElementPresent("button[data-calendly-label='event_details_section']",10000)
+            .waitForElementPresent("button[data-calendly-label='event_details_section']", 10000)
             .click("button[data-calendly-label='event_details_section']")
-            .waitForElementPresent("input#event-name-field",10000)
+            .waitForElementPresent("input#event-name-field", 10000)
             .pause(1000)
-            .setValue("input#event-name-field",exceedMaxInput)
+            .setValue("input#event-name-field", exceedMaxInput)
             .sendKeys('input#event-name-field', browser.Keys.ENTER)
             .isPresent("xpath","//div[contains(text(),'maximum is 55 characters')]")
-            .setValue("input#event-name-field",event_name)
+            .setValue("input#event-name-field", event_name)
             .sendKeys('input#event-name-field', browser.Keys.ENTER)
             .pause(3000) // save
             .refresh()
@@ -70,11 +70,11 @@ describe('Basic Event Test Suite', function() {
         // Edge Case - Input is exactly the max character limit
         let exactInput = "a".repeat(55);
         browser
-            .waitForElementPresent("button[data-calendly-label='event_details_section']",10000)
+            .waitForElementPresent("button[data-calendly-label='event_details_section']", 10000)
             .click("button[data-calendly-label='event_details_section']")
-            .waitForElementPresent("input#event-name-field",10000)
+            .waitForElementPresent("input#event-name-field", 10000)
             .pause(1000)
-            .setValue("input#event-name-field",exactInput)
+            .setValue("input#event-name-field", exactInput)
             .sendKeys('input#event-name-field', browser.Keys.ENTER)
             .pause(3000) // save
             .refresh()
@@ -82,11 +82,11 @@ describe('Basic Event Test Suite', function() {
         // Symbol test
         let varietyInput = "!@#[]%^&*()+-=_%#<>?.,/`~:;{}|";
         browser
-            .waitForElementPresent("button[data-calendly-label='event_details_section']",10000)
+            .waitForElementPresent("button[data-calendly-label='event_details_section']", 10000)
             .click("button[data-calendly-label='event_details_section']")
-            .waitForElementPresent("input#event-name-field",10000)
+            .waitForElementPresent("input#event-name-field", 10000)
             .pause(1000)
-            .setValue("input#event-name-field",varietyInput)
+            .setValue("input#event-name-field", varietyInput)
             .sendKeys('input#event-name-field', browser.Keys.ENTER)
             .pause(3000) // save
             .refresh()
@@ -95,11 +95,11 @@ describe('Basic Event Test Suite', function() {
         let sqlQuery = "'; DROP TABLE users; --";
         let sqlQuerySelector = "\\'; DROP TABLE users; --";
         browser
-            .waitForElementPresent("button[data-calendly-label='event_details_section']",10000)
+            .waitForElementPresent("button[data-calendly-label='event_details_section']", 10000)
             .click("button[data-calendly-label='event_details_section']")
-            .waitForElementPresent("input#event-name-field",10000)
+            .waitForElementPresent("input#event-name-field", 10000)
             .pause(1000)
-            .setValue("input#event-name-field",sqlQuery)
+            .setValue("input#event-name-field", sqlQuery)
             .sendKeys('input#event-name-field', browser.Keys.ENTER)
             .pause(3000) // save
             .navigateTo("https://calendly.com/event_types/user/me")
@@ -110,17 +110,16 @@ describe('Basic Event Test Suite', function() {
             .click("button[data-calendly-label='event_details_section']")
             .waitForElementPresent("input#event-name-field",10000)
             .pause(1000)
-            .setValue("input#event-name-field",event_name)
+            .setValue("input#event-name-field", event_name)
             .sendKeys('input#event-name-field', browser.Keys.ENTER)
             .pause(3000) // save
         
         // Revert the event name after all the input tests
         browser
-            .waitForElementPresent("div[data-testid='event-type-editor'] div:first-child button",10000, function() {
-                this.click("xpath","/html/body/div[6]/div[2]/div/div/div/div[1]/div/div/div[1]/div/button") // click done
-            })
+            .waitForElementPresent("div[data-testid='event-type-editor'] div:first-child button",10000)
+            .click("div[data-testid='event-type-editor'] div:first-child button") // click done
             .waitForElementPresent(`button[aria-label='${event_name_selector}']`, 10000)
-            .assert.visible(`button[aria-label='${event_name_selector}']`) // verify event card is created
+            .isPresent(`button[aria-label='${event_name_selector}']`) // verify event card is created
     });
 
     after(function(browser) {
