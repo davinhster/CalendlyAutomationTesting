@@ -2,6 +2,7 @@ describe('Basic Event Test Suite', function() {
     var event_name_selectors = [];
     before(function(browser) {
         browser
+            .window.maximize()
             .navigateTo('https://calendly.com/')
             .waitForElementPresent('button#onetrust-accept-btn-handler', 10000)
             .click("button#onetrust-accept-btn-handler") // accept cookies
@@ -112,7 +113,7 @@ describe('Basic Event Test Suite', function() {
             .pause(1000)
             .setValue("input#event-name-field", event_name)
             .sendKeys('input#event-name-field', browser.Keys.ENTER)
-            .pause(3000) // save
+            .pause(5000) // save
         
         // Revert the event name after all the input tests
         browser
