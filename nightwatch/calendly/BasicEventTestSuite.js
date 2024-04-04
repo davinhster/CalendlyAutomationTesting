@@ -119,6 +119,8 @@ describe('Basic Event Test Suite', function() {
         browser
             .waitForElementPresent("div[data-testid='event-type-editor'] div:first-child button",10000)
             .click("div[data-testid='event-type-editor'] div:first-child button") // click done
+            .navigateTo("https://calendly.com/event_types/user/me")
+            .pause(3000)
             .waitForElementPresent(`button[aria-label='${event_name_selector}']`, 10000)
             .isPresent(`button[aria-label='${event_name_selector}']`) // verify event card is created
     });
